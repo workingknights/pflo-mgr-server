@@ -1,0 +1,12 @@
+{"_id":{"$oid":"5880a81b35988618e2f7d269"},"className":"name.aknights.api.Ticker","symbol":"VWO","currency":"USD","exchange":"NYSEARCA","fullName":"Vanguard FTSE Emerging Markets ETF"}
+{"_id":{"$oid":"588165658420e623f4722b72"},"className":"name.aknights.api.Ticker","symbol":"VJPN","currency":"GBP","exchange":"LSE","fullName":"Vanguard FTSE Japan UCITS ETF"}
+{"_id":{"$oid":"5881658d8420e623f4722b73"},"className":"name.aknights.api.Ticker","symbol":"CPJ1","currency":"GBp","exchange":"LSE","fullName":"iShares Core MSCI Pacific ex-Japan UCITS ETF USD Acc"}
+{"_id":{"$oid":"588165ad8420e623f4722b74"},"className":"name.aknights.api.Ticker","symbol":"VUSA","currency":"GBP","exchange":"LSE","fullName":"Vanguard S\u0026P 500 UCITS ETF"}
+{"_id":{"$oid":"588165d58420e623f4722b75"},"className":"name.aknights.api.Ticker","symbol":"VEU","currency":"USD","exchange":"NYSEARCA","fullName":"Vanguard FTSE All-World ex-US ETF"}
+{"_id":{"$oid":"588165ef8420e623f4722b76"},"className":"name.aknights.api.Ticker","symbol":"SWDA","currency":"GBp","exchange":"LSE","fullName":"iShares Core MSCI World UCITS ETF USD Acc"}
+{"_id":{"$oid":"588166148420e623f4722b77"},"className":"name.aknights.api.Ticker","symbol":"MKS","currency":"GBp","exchange":"LSE","fullName":"Marks \u0026 Spencer Group PLC"}
+{"_id":{"$oid":"588166328420e623f4722b78"},"className":"name.aknights.api.Ticker","symbol":"VEUR","currency":"GBP","exchange":"LSE","fullName":"Vanguard FTSE Developed Europe UCITS ETF"}
+{"_id":{"$oid":"5881664d8420e623f4722b79"},"className":"name.aknights.api.Ticker","symbol":"VCIT","currency":"USD","exchange":"NYSEARCA","fullName":"Vanguard Intermediate-Term Corporate Bond ETF"}
+{"_id":{"$oid":"588166668420e623f4722b7a"},"className":"name.aknights.api.Ticker","symbol":"VBR","currency":"USD","exchange":"NYSEARCA","fullName":"Vanguard Small-Cap Value ETF"}
+{"_id":{"$oid":"588166828420e623f4722b7b"},"className":"name.aknights.api.Ticker","symbol":"VTI","currency":"USD","exchange":"NYSEARCA","fullName":"Vanguard Total Stock Market ETF"}
+{"_id":{"$oid":"5881669b8420e623f4722b7c"},"className":"name.aknights.api.Ticker","symbol":"VCLT","currency":"USD","exchange":"NYSEARCA","fullName":"Vanguard Long-Term Corporate Bond ETF"}

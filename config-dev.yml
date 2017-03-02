@@ -1,0 +1,33 @@
+server:
+  rootPath: '/api/'
+
+env: test
+
+jwtTokenSecret: "cV2uHolULHblnTjc28BGbahb2UjwqN_iEu5yfgMo22KrOVr_9zeQ2i2zzN6ZwgXL"
+expectedAudience: "T2HQUxSUXXutd1rigWpUvdEONkd5s1gm"
+
+dbConfig:
+  host: localhost
+  port: 27017
+  dbName: pflomgr
+  user: pflomgr
+  password: ${MONGODB_PASS}
+
+server:
+  applicationConnectors:
+    - type: http
+      port: ${PORT:-5000}
+  adminConnectors:
+    - type: http
+      port: 8081
+
+logging:
+  level: INFO
+  loggers:
+    name.aknights: DEBUG
+  appenders:
+    - type: console
+      threshold: ALL
+      target: stdout
+      logFormat: "%-5level [%thread]: %logger{30} %message%n"
+

@@ -1,0 +1,36 @@
+server:
+  rootPath: '/api/'
+
+env: prod
+
+jwtTokenSecret: "cV2uHolULHblnTjc28BGbahb2UjwqN_iEu5yfgMo22KrOVr_9zeQ2i2zzN6ZwgXL"
+expectedAudience: "T2HQUxSUXXutd1rigWpUvdEONkd5s1gm"
+
+dbConfig:
+  host: ds127968.mlab.com
+  port: 27968
+  dbName: heroku_n91f12d8
+  user: heroku_n91f12d8
+  password: ${MONGODB_PASS}
+
+
+quotesConfig:
+  barchartApiUrl: http://marketdata.websol.barchart.com/getQuote.json
+  barchartApiKey: 440c3382a95ba20d096e2c34b6493ca1
+  yahooApiUrl: http://query.yahooapis.com/v1/public/yql
+#  cacheTtl: 10000
+
+
+server:
+  applicationConnectors:
+    - type: http
+      port: ${PORT:-8080}
+  adminConnectors:
+    - type: http
+      port: 8081
+
+
+logging:
+  level: INFO
+  loggers:
+    name.aknights: DEBUG
