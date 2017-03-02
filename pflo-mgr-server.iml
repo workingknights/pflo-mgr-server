@@ -100,7 +100,6 @@
     <orderEntry type="library" name="Maven: cglib:cglib-nodep:2.2.2" level="project" />
     <orderEntry type="library" name="Maven: com.thoughtworks.proxytoys:proxytoys:1.0" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-assets:1.0.5" level="project" />
-    <orderEntry type="library" name="Maven: name.aknights:pflo-mgr-ui:0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.google.dagger:dagger:2.8" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: com.google.dagger:dagger-compiler:2.8" level="project" />

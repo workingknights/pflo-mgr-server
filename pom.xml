@@ -43,11 +43,6 @@
             <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
-            <groupId>name.aknights</groupId>
-            <artifactId>pflo-mgr-ui</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
             <version>2.8</version>
