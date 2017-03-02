@@ -7,10 +7,10 @@ jwtTokenSecret: "cV2uHolULHblnTjc28BGbahb2UjwqN_iEu5yfgMo22KrOVr_9zeQ2i2zzN6ZwgX
 expectedAudience: "T2HQUxSUXXutd1rigWpUvdEONkd5s1gm"
 
 dbConfig:
-  host: ds127968.mlab.com
-  port: 27968
-  dbName: heroku_n91f12d8
-  user: heroku_n91f12d8
+  host: ds115110.mlab.com
+  port: 15110
+  dbName: heroku_w6bhtl9z
+  user: heroku_w6bhtl9z
   password: ${MONGODB_PASS}
 
 
