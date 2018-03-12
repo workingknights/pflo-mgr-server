@@ -1,47 +1,82 @@
 package name.aknights.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Value;
+import lombok.experimental.Tolerate;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.*;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.NotSaved;
+import org.mongodb.morphia.annotations.Reference;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity("holdings")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Data
+@NoArgsConstructor
 public class Holding {
 
     @Id
+    @Getter(AccessLevel.NONE)
     private ObjectId id;
 
-    private String userId;
+    @NotEmpty
+    String userId;
 
     @Reference
-    private Ticker ticker;
+    @NotEmpty
+    Ticker ticker;
 
     @Min(0)
-    private int shares;
+    int shares;
 
     @NotNull
-    private Date tradeDate;
+    Date tradeDate;
 
     @Min(0)
-    private Double tradePrice;
+    Double tradePrice;
 
-    private Double commission;
+    Double commission;
 
-    private Double initialMarketValue;
+    Double initialMarketValue;
 
     @NotSaved
-    private Double initialMarketValueBase;
+    Double initialMarketValueBase;
+    
+    @NotSaved
+    Double cost;
 
-    public Holding() {
+    @JsonCreator
+    public Holding(@JsonProperty("id") String id, @JsonProperty("userId") String userId, @JsonProperty("ticker") Ticker ticker,
+                   @JsonProperty("shares") int shares, @JsonProperty("tradeDate") Date tradeDate, @JsonProperty("tradePrice") Double tradePrice,
+                   @JsonProperty("commission") Double commission, @JsonProperty("initialMarketValue") Double initialMarketValue,
+                   @JsonProperty("initialMarketValueBase") Double initialMarketValueBase) {
+        this.id = (id == null || id.isEmpty()) ? null : new ObjectId(id);
+        this.userId = userId;
+        this.ticker = ticker;
+        this.shares = shares;
+        this.tradeDate = tradeDate;
+        this.tradePrice = tradePrice;
+        this.commission = commission;
+        this.initialMarketValue = initialMarketValue;
+        this.initialMarketValueBase = initialMarketValueBase;
+        this.cost = initialMarketValue + ((commission != null) ? commission : 0.0);
+
     }
 
     /* For use in tests */
+    @Tolerate
     public Holding(Ticker ticker, int shares, Date tradeDate, Double tradePrice, Double commission) {
         this.ticker = ticker;
         this.shares = shares;
@@ -49,6 +84,10 @@ public class Holding {
         this.tradePrice = tradePrice;
         this.commission = commission;
         this.initialMarketValue = (shares * tradePrice) - ((commission != null) ? commission : 0.0);
+        this.id = new ObjectId();
+        this.userId = "";
+        this.initialMarketValueBase = this.initialMarketValue;
+        this.cost = initialMarketValue + ((commission != null) ? commission : 0.0);
     }
 
     @JsonProperty
@@ -56,82 +95,8 @@ public class Holding {
         return (id != null) ? id.toHexString() : "";
     }
 
-    @JsonProperty
-    public void setId(String id) {
-        this.id = (id == null || id.isEmpty()) ? null : new ObjectId(id);
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    @JsonProperty
-    public Ticker getTicker() {
-        return ticker;
-    }
-
-    @JsonProperty
-    public void setTicker(Ticker ticker) {
-        this.ticker = ticker;
-    }
-
-    @JsonProperty
-    public int getShares() {
-        return shares;
-    }
-
-    @JsonProperty
-    public Date getTradeDate() {
-        return tradeDate;
-    }
-
-    @JsonProperty
-    public Double getTradePrice() {
-        return tradePrice;
-    }
-
-    @JsonProperty
-    public Double getCommission() {
-        return commission;
-    }
-
-    @JsonProperty
-    public Double getInitialMarketValue() {
-        return (shares * tradePrice);
-    }
-
-    @JsonProperty
     public Double getCost() {
-        return getInitialMarketValue() + ((commission != null) ? commission : 0.0);
-    }
-
-    @JsonProperty
-    public void setInitialMarketValue(Double initialMarketValue) {
-        this.initialMarketValue = initialMarketValue;
-    }
-
-    @JsonProperty
-    public void setShares(int shares) {
-        this.shares = shares;
-    }
-
-    @JsonProperty
-    public void setTradeDate(Date tradeDate) {
-        this.tradeDate = tradeDate;
-    }
-
-    @JsonProperty
-    public void setTradePrice(Double tradePrice) {
-        this.tradePrice = tradePrice;
-    }
-
-    @JsonProperty
-    public void setCommission(Double commission) {
-        this.commission = commission;
+        return initialMarketValue + ((commission != null) ? commission : 0.0);
     }
 
     @Override
@@ -148,13 +113,4 @@ public class Holding {
                 '}';
     }
 
-    @JsonProperty
-    public void setInitialMarketValueBase(Double initialMarketValueBase) {
-        this.initialMarketValueBase = initialMarketValueBase;
-    }
-
-    @JsonProperty
-    public Double getInitialMarketValueBase() {
-        return initialMarketValueBase;
-    }
 }

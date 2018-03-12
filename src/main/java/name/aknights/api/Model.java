@@ -1,60 +1,62 @@
 package name.aknights.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Value;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 @Entity("models")
+@Data
+@NoArgsConstructor
 public class Model {
     @Id
-    private ObjectId id;
+    @Getter(AccessLevel.NONE)
+    ObjectId id;
 
-    private String userId;
+    String userId;
 
-    @JsonProperty
-    private Set<ModelEntry> entries = new HashSet<>();
+    Set<ModelEntry> entries;
 
-    /**
-     * For serializing
-     */
-    public Model() {
-    }
-
-    public Model(String userId) {
-        this.userId = userId;
-    }
-
-    public Model(Set<ModelEntry> entries) {
+    public Model(ObjectId objectId, String name, Set<ModelEntry> entries) {
+        this.id = objectId;
+        this.userId = name;
         this.entries = entries;
     }
+//    Set<ModelEntry> entries = new HashSet<>();
 
-    @JsonProperty
+//
+//    public Model(String userId) {
+//        this.userId = userId;
+//    }
+//
+//    public Model(Set<ModelEntry> entries) {
+//        this.entries = entries;
+//    }
+
     public String getId() {
         return (id != null) ? id.toHexString() : "";
     }
 
+
     @JsonProperty
-    public void setId(String id) {
-        this.id = null;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public Set<ModelEntry> getEntries() {
-        return entries;
+        return Collections.unmodifiableSet(this.entries);
     }
 
-    public void setEntries(Set<ModelEntry> entries) {
-        this.entries = entries;
-    }
+//
+//    public Set<ModelEntry> getEntries() {
+//        return entries;
+//    }
+//
+//    public void setEntries(Set<ModelEntry> entries) {
+//        this.entries = entries;
+//    }
 }

@@ -1,7 +1,8 @@
 package name.aknights.services;
 
 import name.aknights.api.Ticker;
-import name.aknights.core.quotes.Quote;
+import name.aknights.api.quotes.IQuote;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ public class CachingQuotesService implements QuotesService {
     private Logger logger = LoggerFactory.getLogger(CachingQuotesService.class);
     private static final long DEFAULT_TTL = 600000;
 
-    private final Map<String, Quote> cacheMap = new HashMap<>();
+    private final Map<String, IQuote> cacheMap = new HashMap<>();
     private long ttl = DEFAULT_TTL;
     private long lastCacheClear = 0;
     private QuotesService[] underlyingServices;
@@ -30,32 +31,38 @@ public class CachingQuotesService implements QuotesService {
     }
 
     @Override
-    public Collection<Quote> getQuotes(Set<Ticker> tickers) {
+    public Set<IQuote> getQuotes(Set<Ticker> tickers) {
         // get all cachedQuotes
-        Set<Quote> quotesToReturn = readFromCache(tickers);
+        Set<IQuote> quotesToReturn = readFromCache(tickers);
 
+        // if we don't have cached quotes for all tickers, fetch them
         if (quotesToReturn.size() != tickers.size()) {
 
-            // for all cache misses, retrieve quotes from underlying service
-            Set<Ticker> unCachedTickers = tickers.stream().filter(ticker -> !cacheMap.containsKey(ticker.getSymbol())).collect(Collectors.toSet());
+            Set<Ticker> tickersToQuote = tickers.stream().filter(ticker -> !cacheMap.containsKey(ticker.getSymbol())).collect(Collectors.toSet());
 
-            if (unCachedTickers.size() > 0) {
-                Collection<Quote> fetchedQuotes = underlyingServices[0].getQuotes(unCachedTickers);
+            if (tickersToQuote.size() > 0) {
+                Set<IQuote> fetchedQuotes = underlyingServices[0].getQuotes(tickersToQuote);
                 // add them to the set of quotesToReturn
                 quotesToReturn.addAll(fetchedQuotes);
                 writeToCache(fetchedQuotes);
 
-                fetchedQuotes.stream().forEach(q -> unCachedTickers.remove(new Ticker(q.getSymbol())));
+                logger.debug("Fetched quotes for {} tickers from {} service", fetchedQuotes.size(), underlyingServices[0].getClass().getName());
 
-                if (unCachedTickers.size() > 0) { // check next service
-                    fetchedQuotes = underlyingServices[1].getQuotes(unCachedTickers);
+                fetchedQuotes.stream()
+                        .forEach(q -> tickersToQuote.remove(new Ticker(ObjectId.get().toHexString(), q.getSymbol(), "", "", "")));
+
+                if (tickersToQuote.size() > 0) { // check next service
+                    fetchedQuotes = underlyingServices[1].getQuotes(tickersToQuote);
                     // add them to the set of quotesToReturn
                     quotesToReturn.addAll(fetchedQuotes);
                     writeToCache(fetchedQuotes);
 
+                    logger.debug("Fetched quotes for {} tickers from {} service", fetchedQuotes.size(), underlyingServices[0].getClass().getName());
+
                     // check to see we have them all now
-                    fetchedQuotes.stream().forEach(q -> unCachedTickers.remove(new Ticker(q.getSymbol())));
-                    if (unCachedTickers.size() != 0)
+                    fetchedQuotes.stream()
+                            .forEach(q -> tickersToQuote.remove(new Ticker(ObjectId.get().toHexString(), q.getSymbol(), "", "", "")));
+                    if (tickersToQuote.size() != 0)
                         logger.warn("Quotes for some tickers still can not be found!");
                 }
             }
@@ -68,7 +75,7 @@ public class CachingQuotesService implements QuotesService {
     }
 
     @Override
-    public Collection<Quote> getQuote(Ticker... tickers) {
+    public Set<IQuote> getQuote(Ticker... tickers) {
 //        Set<Ticker> tickers = new HashSet<>();
 //        tickers.add(ticker);
 
@@ -77,10 +84,10 @@ public class CachingQuotesService implements QuotesService {
 //        else return Optional.empty();
     }
 
-    Set<Quote> readFromCache(Set<Ticker> tickers) {
+    Set<IQuote> readFromCache(Set<Ticker> tickers) {
         //TODO debug this
         checkTtl();
-        Set<Quote> quotes = new HashSet<>();
+        Set<IQuote> quotes = new HashSet<>();
         for(Ticker ticker: tickers) {
             if (cacheMap.containsKey(ticker.getSymbol())) {
                 quotes.add(cacheMap.get(ticker.getSymbol()));
@@ -103,8 +110,10 @@ public class CachingQuotesService implements QuotesService {
         this.lastCacheClear = System.currentTimeMillis();
     }
 
-    void writeToCache(Collection<Quote> fetchedQuotes) {
+    void writeToCache(Set<IQuote> fetchedQuotes) {
         checkTtl();
-        cacheMap.putAll(fetchedQuotes.stream().collect(Collectors.toMap(Quote::getSymbol, Function.identity())));
+        cacheMap.putAll(
+                fetchedQuotes.stream()
+                        .collect(Collectors.toMap(IQuote::getSymbol, Function.identity())));
     }
 }

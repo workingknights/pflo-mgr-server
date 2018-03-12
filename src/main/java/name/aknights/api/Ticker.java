@@ -1,7 +1,11 @@
 package name.aknights.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Value;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.Length;
 import org.mongodb.morphia.annotations.Entity;
@@ -10,99 +14,35 @@ import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity("tickers")
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 public class Ticker {
-    @Id
-    private ObjectId id;
+    @Id ObjectId id;
 
-    @NotNull
-    @Length(max = 7)
-    @Indexed(options = @IndexOptions(unique = true))
-    private String symbol;
+    @NotNull @Length(max = 7)
+    @Indexed(options = @IndexOptions(unique = true)) String symbol;
 
-    @NotNull
-    @Length(min = 3, max = 3)
-    private String currency;
+    @NotNull @Length(min = 3, max = 3) String currency;
+    @NotNull String exchange;
+    String fullName;
 
-    @NotNull
-    private String exchange;
-
-    private String fullName;
-
-    public Ticker() {
-    }
-
-    public Ticker(String symbol, String currency, String exchange, String fullName) {
+    @JsonCreator
+    public Ticker(@JsonProperty("id") String id, @JsonProperty("symbol") String symbol, @JsonProperty("currency") String currency,
+                   @JsonProperty("exchange") String exchange, @JsonProperty("fullName") String fullName) {
+        this.id = (id == null || id.isEmpty()) ? null : new ObjectId(id);
         this.symbol = symbol;
         this.currency = currency;
         this.exchange = exchange;
         this.fullName = fullName;
-    }
-
-    public Ticker(String symbol) {
-        this.symbol = symbol;
     }
 
     @JsonProperty
     public String getId() {
         return (id != null) ? id.toHexString() : "";
-    }
-
-    @JsonProperty
-    public void setId(String id) {
-        this.id = (id == null || id.isEmpty()) ? null : new ObjectId(id);
-    }
-
-    @JsonProperty
-    public String getSymbol() {
-        return symbol;
-    }
-
-    @JsonProperty
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    @JsonProperty
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    @JsonProperty
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
-    }
-
-    @JsonProperty
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    @JsonProperty
-    public String getCurrency() {
-        return currency;
-    }
-
-    @JsonProperty
-    public String getExchange() {
-        return exchange;
-    }
-
-    @JsonProperty
-    public String getFullName() {
-        return fullName;
-    }
-
-    @Override
-    public String toString() {
-        return "Ticker{" +
-                "symbol='" + symbol + '\'' +
-                ", currency='" + currency + '\'' +
-                ", exchange='" + exchange + '\'' +
-                ", fullName='" + fullName + '\'' +
-                '}';
     }
 
     @Override

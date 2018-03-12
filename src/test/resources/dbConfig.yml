@@ -1,0 +1,5 @@
+host: localhost
+port: 27017
+dbName: pflomgr
+user: pflomgr
+password: pas5word

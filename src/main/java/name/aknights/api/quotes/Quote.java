@@ -1,8 +1,8 @@
-package name.aknights.core.quotes;
+package name.aknights.api.quotes;
 
 import java.util.Optional;
 
-public class Quote {
+public class Quote implements IQuote {
 
     protected String symbol;
     protected String name;
@@ -10,21 +10,17 @@ public class Quote {
     protected Double lastPrice;
     protected Double percentChange;
     protected Double change;
-    protected Double yearLow;
-    protected Double yearHigh;
 
     public Quote() {
     }
 
-    public Quote(String symbol, String name, Double previousClose, Double lastPrice, Double percentChange, Double change, Double yearLow, Double yearHigh) {
+    public Quote(String symbol, String name, Double previousClose, Double lastPrice, Double percentChange, Double change) {
         this.symbol = symbol;
         this.name = name;
         this.previousClose = previousClose;
         this.lastPrice = lastPrice;
         this.percentChange = percentChange;
         this.change = change;
-        this.yearLow = yearLow;
-        this.yearHigh = yearHigh;
     }
 
     public String getSymbol() {
@@ -39,23 +35,15 @@ public class Quote {
         return Optional.ofNullable(previousClose);
     }
 
-    public Double getPercentChange() {
-        return percentChange;
+    public Optional<Double> getPercentChange() {
+        return Optional.ofNullable(percentChange);
     }
 
-    public Double getChange() {
-        return change;
+    public Optional<Double> getChange() {
+        return Optional.ofNullable(change);
     }
 
-    public Double getLastPrice() {
-        return lastPrice;
-    }
-
-    public Double getYearLow() {
-        return yearLow;
-    }
-
-    public Double getYearHigh() {
-        return yearHigh;
+    public Optional<Double> getLastPrice() {
+        return Optional.ofNullable(lastPrice);
     }
 }

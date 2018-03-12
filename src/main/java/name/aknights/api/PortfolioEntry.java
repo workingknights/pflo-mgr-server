@@ -1,6 +1,6 @@
 package name.aknights.api;
 
-import name.aknights.core.Recommendation;
+import java.util.Optional;
 
 public class PortfolioEntry {
     private String ticker;
@@ -16,8 +16,6 @@ public class PortfolioEntry {
     private Double totalGain;
     private String currency;
     private Double totalGainBase;
-    private Double yearLow;
-    private Double yearHigh;
     private Recommendation recommendation;
     private Double rebalToModel;
     private Integer rebalShares;
@@ -25,13 +23,16 @@ public class PortfolioEntry {
     private Double ma50Day;
     private Double ma200Day;
 
-    public PortfolioEntry() {
-    }
+//    public PortfolioEntry(String symbol, String name, int totalNumShares, String currency, double currPrice,
+//                          double percentChange, double dailyGainBase, double totalCost,
+//                          double currMarketValue, double currMarketValueBase, double totalPercentGain, double totalGain,
+//                          double totalGainBase, double avgUnitCost, Recommendation recommendation) {
+//    }
 
     public PortfolioEntry(String ticker, String name, Integer totalShares, String currency, Double currPrice,
                           Double percentChange, Double dailyGainBase, Double totalCost,
                           Double marketValue, Double marketValueBase, Double totalPercentGain, Double totalGain,
-                          Double totalGainBase, Double yearLow, Double yearHigh, Double avgUnitCost, Recommendation recommendation) {
+                          Double totalGainBase, Double avgUnitCost, Recommendation recommendation) {
         this.ticker = ticker;
         this.name = name;
         this.totalShares = totalShares;
@@ -48,8 +49,6 @@ public class PortfolioEntry {
         this.totalPercentGain = totalPercentGain;
         this.totalGain = totalGain;
         this.totalGainBase = totalGainBase;
-        this.yearLow = yearLow;
-        this.yearHigh = yearHigh;
         this.recommendation = recommendation;
     }
 
@@ -103,14 +102,6 @@ public class PortfolioEntry {
 
     public String getCurrency() {
         return currency;
-    }
-
-    public Double getYearLow() {
-        return yearLow;
-    }
-
-    public Double getYearHigh() {
-        return yearHigh;
     }
 
     public Double getCurrPrice() {

@@ -1,11 +1,11 @@
 package name.aknights.services;
 
 import name.aknights.api.Ticker;
+import name.aknights.api.quotes.IQuote;
 import name.aknights.config.QuotesServiceConfiguration;
 import name.aknights.core.Exchange;
-import name.aknights.core.quotes.BarchartQuoteDetail;
-import name.aknights.core.quotes.BarchartQuotesResponse;
-import name.aknights.core.quotes.Quote;
+import name.aknights.api.quotes.BarchartQuoteDetail;
+import name.aknights.api.quotes.BarchartQuotesResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,17 +36,17 @@ public class BarchartQuotesService implements QuotesService {
     }
 
     @Override
-    public Set<Quote> getQuotes(Set<Ticker> tickers) {
+    public Set<IQuote> getQuotes(Set<Ticker> tickers) {
         String tickerQuery = buildTickerQueryString(tickers);
         BarchartQuotesResponse quotesData = getQuotesResponse(tickerQuery);
 
         Collection<BarchartQuoteDetail> results = quotesData.getResults();
 
-        return results == null ? Collections.EMPTY_SET : new HashSet(results);
+        return results == null ? Collections.EMPTY_SET : new HashSet<>(results);
     }
 
     @Override
-    public Set<Quote> getQuote(Ticker... tickers) {
+    public Set<IQuote> getQuote(Ticker... tickers) {
         return getQuotes(new HashSet<>(Arrays.asList(tickers)));
 /*
         BarchartQuotesResponse quotesData = getQuotesResponse(buildTickerQueryString(tickers));

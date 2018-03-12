@@ -5,7 +5,8 @@ import name.aknights.api.PortfolioEntry;
 import name.aknights.api.Ticker;
 import name.aknights.core.Currency;
 import name.aknights.core.Exchange;
-import name.aknights.core.quotes.Quote;
+import name.aknights.api.quotes.Quote;
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,32 +37,13 @@ public class PortfolioServiceTest {
     }
 
     @Test
-    public void withSmallPercentChangeFromYearHighAndPositiveDailyChangeSellIsRecommended() throws Exception {
-        Quote quote = generateQuote(0.011, 10.3, 2.0, 10.5);
-        assertEquals("SELL", service.calcRecommendation(quote).getDirection());
-    }
-
-    @Test
-    public void withLowPercentChangeFromYearHighSellIsRecommended() throws Exception {
-        Quote quote = generateQuote(10.3, 2.0, 10.5);
-        assertEquals("SELL", service.calcRecommendation(quote).getDirection());
-    }
-
-    @Test
-    public void withLowPercentChangeFromYearLowBuyIsRecommended() throws Exception {
-        Quote quote = generateQuote(2.1, 2.0, 10.5);
-
-        assertEquals("BUY", service.calcRecommendation(quote).getDirection());
-    }
-
-    @Test
     public void withSingleNonUSDHolding_EntryCreatedCorrectly() throws Exception {
         Calendar tradeDate = Calendar.getInstance();
         tradeDate.set(2016, 7, 30);
-        Ticker ticker = new Ticker("CPJ1.L", Currency.GBp.name(), Exchange.LSE.name(), null);
+        Ticker ticker = new Ticker(ObjectId.get().toHexString(),"CPJ1.L", Currency.GBp.name(), Exchange.LSE.name(), null);
         Holding holding = new Holding(ticker, 20, tradeDate.getTime(), 9138.25, 0.0);
 
-        Quote quote = new Quote(ticker.getSymbol(), ticker.getFullName(), 9739.00, 9739.00, 6.9, 44.0, 9700.0, 9800.0);
+        Quote quote = new Quote(ticker.getSymbol(), ticker.getFullName(), 9739.00, 9739.00, 6.9, 44.0);
 
         PortfolioEntry entry = service.createEntry(Collections.singletonList(holding), quote);
 
@@ -78,14 +60,14 @@ public class PortfolioServiceTest {
     @Test
     public void withTwoUSDHoldings_EntryCreatedCorrectly() throws Exception {
         Calendar tradeDate = Calendar.getInstance();
-        Ticker ticker = new Ticker("VBR", Currency.USD.name(), Exchange.NYSEARCA.name(), null);
+        Ticker ticker = new Ticker(ObjectId.get().toHexString(),"VBR", Currency.USD.name(), Exchange.NYSEARCA.name(), null);
         tradeDate.set(2016, 6, 20);
         Holding holding1 = new Holding(ticker, 30, tradeDate.getTime(), 109.44, 1.5);
 
         tradeDate.set(2016, 11, 6);
         Holding holding2 = new Holding(ticker, 10, tradeDate.getTime(), 121.32, 0.5);
 
-        Quote quote = new Quote(ticker.getSymbol(), ticker.getFullName(), 123.8, 123.8, 6.9, 44.0, 120.0, 130.0);
+        Quote quote = new Quote(ticker.getSymbol(), ticker.getFullName(), 123.8, 123.8, 6.9, 44.0);
 
         PortfolioEntry entry = service.createEntry(Arrays.asList(holding1, holding2), quote);
 
@@ -93,18 +75,18 @@ public class PortfolioServiceTest {
         assertEquals("VBR", entry.getTicker());
         assertEquals("USD",entry.getCurrency());
         assertEquals(40, (long) entry.getTotalShares());
-        assertEquals(4498.4, entry.getTotalCost(), 0.001);
+        assertEquals(4496.4, entry.getTotalCost(), 0.001);
         assertEquals(4952.0, entry.getMarketValue(), 0.001);
-        assertEquals(453.60, entry.getTotalGain(), 0.01);
-        assertEquals(453.60, entry.getTotalGainBase(), 0.01);
+        assertEquals(455.60, entry.getTotalGain(), 0.01);
+        assertEquals(455.60, entry.getTotalGainBase(), 0.01);
     }
 
 
     private Quote generateQuote(double lastPrice, double yearLow, double yearHigh) {
-        return new Quote("", "", 0.0, lastPrice, 0.1, 1.5, yearLow, yearHigh);
+        return new Quote("", "", 0.0, lastPrice, 0.1, 1.5);
     }
 
     private Quote generateQuote(double percentChange, double lastPrice, double yearLow, double yearHigh) {
-        return new Quote("", "", 0.0, lastPrice, percentChange, 1.5, yearLow, yearHigh);
+        return new Quote("", "", 0.0, lastPrice, percentChange, 1.5);
     }
 }

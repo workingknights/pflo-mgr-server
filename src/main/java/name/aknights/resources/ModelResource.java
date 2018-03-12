@@ -5,6 +5,7 @@ import io.dropwizard.auth.Auth;
 import name.aknights.api.Model;
 import name.aknights.api.ModelEntry;
 import name.aknights.services.ModelService;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +71,11 @@ public class ModelResource {
 
     @POST
     @PermitAll
-    public Response createModel(@NotNull Model model, @Context HttpServletRequest request, @Auth Principal principal) {
-        model.setUserId(principal.getName());
+    public Response createModel(@NotNull Model newModel, @Context HttpServletRequest request, @Auth Principal principal) {
+//        model.setUserId(principal.getName());
+
+        Model model = new Model(new ObjectId(newModel.getId()), principal.getName(), newModel.getEntries());
+
         String uuid = modelService.createModel(model);
         URI location = UriBuilder.fromPath(request.getRequestURI()).path(uuid).build();
         return Response.created(location).build();

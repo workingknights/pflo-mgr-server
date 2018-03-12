@@ -1,4 +1,4 @@
-package name.aknights.core.quotes;
+package name.aknights.api.quotes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -16,9 +16,9 @@ public class QuotesResponseTest {
 
         // Convert JSON string from file to Object
         InputStream resource = this.getClass().getResourceAsStream("/validQuote.json");
-        YahooQuotesResponse response = mapper.readValue(resource, YahooQuotesResponse.class);
+        AlphaVantageQuotesResponse response = mapper.readValue(resource, AlphaVantageQuotesResponse.class);
 
-        assertEquals(3, response.getQuery().getResults().getQuote().size());
+        assertEquals(2, response.getResults().size());
     }
 
 }

@@ -26,20 +26,20 @@ public class HoldingsService {
         Collection<Holding> holdings = holdingDAO.getHoldings(userId);
 
         for (Holding holding: holdings) {
-            long start = System.currentTimeMillis();
-
             double fxRateToBase = fxRatesService.getRateToUsd(holding.getTicker().getCurrency());
             double marketValueBase = holding.getInitialMarketValue() * fxRateToBase;
             holding.setInitialMarketValueBase(marketValueBase);
-
-            if (logger.isTraceEnabled())
-                logger.trace("process holdi ng took {} ms", System.currentTimeMillis()-start);
         }
         return holdings;
-
     }
 
     public String addNewHolding(Holding holding) {
+        double fxRateToBase = fxRatesService.getRateToUsd(holding.getTicker().getCurrency());
+        double initialMarketValueBase = holding.getInitialMarketValue() * fxRateToBase;
+
+        Holding updatedHolding = new Holding(holding.getId(), holding.getUserId(), holding.getTicker(), holding.getShares(), holding.getTradeDate(),
+                holding.getTradePrice(), holding.getCommission(), holding.getInitialMarketValue(), initialMarketValueBase);
+
         return holdingDAO.save(holding).getId().toString();
     }
 
@@ -52,8 +52,8 @@ public class HoldingsService {
     }
 
     public void updateHoldingModel(String holdingId, Holding holding) {
-        if (holding.getId() == null || holding.getId().isEmpty())
-            holding.setId(holdingId);
+//        if (holding.getId() == null || holding.getId().isEmpty())
+//            holding.setId(holdingId);
 
         holdingDAO.save(holding);
     }

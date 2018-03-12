@@ -1,0 +1,5 @@
+barchartApiUrl: http://marketdata.websol.barchart.com/getQuote.json
+barchartApiKey: 440c3382a95ba20d096e2c34b6493ca1
+alphaVantageApiUrl: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY
+alphaVantageApiKey: JXWZII6BBC1PKBPE
+cacheTtl: 50000

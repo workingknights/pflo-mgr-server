@@ -19,10 +19,6 @@ public class PortfolioManagerConfiguration extends Configuration {
 
     @Valid
     @JsonProperty
-    private YahooQuotesConfiguration yahooConfig;
-
-    @Valid
-    @JsonProperty
     private QuotesServiceConfiguration quotesConfig;
 
     @NotEmpty
@@ -47,10 +43,6 @@ public class PortfolioManagerConfiguration extends Configuration {
 
     public DbConfiguration getDbConfig() {
         return dbConfig;
-    }
-
-    public YahooQuotesConfiguration getYahooConfig() {
-        return yahooConfig;
     }
 
     public QuotesServiceConfiguration getQuotesConfig() {

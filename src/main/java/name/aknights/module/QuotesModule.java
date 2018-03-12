@@ -6,7 +6,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import dagger.Module;
 import dagger.Provides;
 import name.aknights.config.QuotesServiceConfiguration;
-import name.aknights.config.YahooQuotesConfiguration;
+import name.aknights.services.AlphaVantageQuotesService;
 import name.aknights.services.BarchartFxRatesService;
 import name.aknights.services.BarchartQuotesService;
 import name.aknights.services.CachingFxRatesService;
@@ -15,8 +15,6 @@ import name.aknights.services.FxRatesService;
 import name.aknights.services.LocalFxRatesService;
 import name.aknights.services.LocalQuotesService;
 import name.aknights.services.QuotesService;
-import name.aknights.services.YahooFxRatesService;
-import name.aknights.services.YahooQuotesService;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 
@@ -48,7 +46,7 @@ public class QuotesModule {
     QuotesService provideQuotesService() {
         QuotesService[] services = (config == null)
                 ? new QuotesService[] {new LocalQuotesService()}
-                : new QuotesService[] {new BarchartQuotesService(getClient(), config), new YahooQuotesService(getClient(), config)};
+                : new QuotesService[] {new BarchartQuotesService(getClient(), config), new AlphaVantageQuotesService(getClient(), config)};
 
         if (config != null && config.getCacheTtl().isPresent())
             return new CachingQuotesService(config.getCacheTtl().get(), services);
@@ -61,7 +59,7 @@ public class QuotesModule {
     FxRatesService provideFxRatesService() {
         FxRatesService[] services = (config == null)
                 ? new FxRatesService[] {new LocalFxRatesService()}
-                : new FxRatesService[] {new BarchartFxRatesService(getClient(), config), new YahooFxRatesService(getClient(), config)};
+                : new FxRatesService[] {new BarchartFxRatesService(getClient(), config)};
 
 
         if (config != null && config.getCacheTtl().isPresent())

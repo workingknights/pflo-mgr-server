@@ -1,8 +1,6 @@
 package name.aknights.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import name.aknights.core.quotes.BarchartQuoteDetail;
-import org.eclipse.jetty.util.DateCache;
 import org.junit.Test;
 
 import java.io.IOException;

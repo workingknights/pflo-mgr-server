@@ -38,8 +38,8 @@ public class ModelService {
     }
 
     public void updateModel(String modelId, Model model) {
-        if (model.getId() == null)
-            model.setId(modelId);
+//        if (model.getId() == null)
+//            model.setId(modelId);
 
         modelDAO.save(model);
     }

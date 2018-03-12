@@ -8,31 +8,42 @@ import java.util.Optional;
 public class QuotesServiceConfiguration {
 
     @NotEmpty
-    @JsonProperty
-    private String yahooApiUrl;
+    private final String alphaVantageApiUrl;
 
     @NotEmpty
-    @JsonProperty
-    private String barchartApiUrl;
+    private final String alphaVantageApiKey;
 
     @NotEmpty
-    @JsonProperty
-    private String barchartApiKey;
+    private final String barchartApiUrl;
 
-    @JsonProperty
-    private Long cacheTtl;
+    @NotEmpty
+    private final String barchartApiKey;
 
-    public QuotesServiceConfiguration() {
+    private final Long cacheTtl;
+
+    private static final long DEFAULT_TTL = 600000;
+
+    public QuotesServiceConfiguration(String alphaVantageApiUrl, String alphaVantageApiKey, String barchartApiUrl, String barchartApiKey) {
+        this(alphaVantageApiUrl, alphaVantageApiKey, barchartApiUrl, barchartApiKey, DEFAULT_TTL);
     }
 
-    public QuotesServiceConfiguration(String yahooApiUrl, String barchartApiUrl, String barchartApiKey) {
-        this.yahooApiUrl = yahooApiUrl;
+    public QuotesServiceConfiguration(@JsonProperty("alphaVantageApiUrl") String alphaVantageApiUrl,
+                                      @JsonProperty("alphaVantageApiKey") String alphaVantageApiKey,
+                                      @JsonProperty("barchartApiUrl") String barchartApiUrl,
+                                      @JsonProperty("barchartApiKey") String barchartApiKey, @JsonProperty("cacheTtl") Long cacheTtl) {
+        this.alphaVantageApiUrl = alphaVantageApiUrl;
+        this.alphaVantageApiKey = alphaVantageApiKey;
         this.barchartApiUrl = barchartApiUrl;
         this.barchartApiKey = barchartApiKey;
+        this.cacheTtl = cacheTtl;
     }
 
-    public String getYahooApiUrl() {
-        return yahooApiUrl;
+    public String getAlphaVantageApiUrl() {
+        return alphaVantageApiUrl;
+    }
+
+    public String getAlphaVantageApiKey() {
+        return alphaVantageApiKey;
     }
 
     public String getBarchartApiUrl() {

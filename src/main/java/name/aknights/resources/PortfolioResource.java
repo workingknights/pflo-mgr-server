@@ -2,7 +2,6 @@ package name.aknights.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
-import name.aknights.api.Data;
 import name.aknights.services.PortfolioService;
 
 import javax.annotation.security.PermitAll;

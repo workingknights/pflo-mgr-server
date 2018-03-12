@@ -47,8 +47,8 @@ public class TickerService {
     }
 
     public void updateTicker(String tickerId, Ticker ticker) {
-        if (ticker.getId() ==  null)
-            ticker.setId(tickerId);
+//        if (ticker.getId() ==  null)
+//            ticker.setId(tickerId);
 
         tickerDAO.save(ticker);
     }

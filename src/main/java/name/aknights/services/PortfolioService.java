@@ -6,8 +6,9 @@ import name.aknights.api.ModelEntry;
 import name.aknights.api.Portfolio;
 import name.aknights.api.PortfolioEntry;
 import name.aknights.api.Ticker;
-import name.aknights.core.Recommendation;
-import name.aknights.core.quotes.Quote;
+import name.aknights.api.Recommendation;
+import name.aknights.api.quotes.IQuote;
+import name.aknights.api.quotes.Quote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +18,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.stream.Collectors.groupingBy;
-import static name.aknights.core.Recommendation.Direction.BUY;
-import static name.aknights.core.Recommendation.Direction.SELL;
+import static name.aknights.api.Recommendation.Direction.BUY;
+import static name.aknights.api.Recommendation.Direction.SELL;
 
 public class PortfolioService {
 
@@ -62,7 +64,7 @@ public class PortfolioService {
 //        logger.debug("create maps of Holdings took {} ms", System.currentTimeMillis() - start);
 
 //        start = System.currentTimeMillis();
-        Collection<Quote> quotes = quotesService.getQuotes(holdingsMap.keySet());
+        Set<IQuote> quotes = quotesService.getQuotes(holdingsMap.keySet());
 //        logger.debug("retrieve Quotes took {} ms", System.currentTimeMillis() - start);
 
 //        start = System.currentTimeMillis();
@@ -113,10 +115,10 @@ public class PortfolioService {
 
         return new PortfolioEntry(null,  null, null, null,
                 null, null, overallDailyGain, totalCost, null,
-                totalMVBase, overallTotalPercentGain,null, overallTotalGainBase, null, null, null, null);
+                totalMVBase, overallTotalPercentGain,null, overallTotalGainBase, null, null);
     }
 
-    PortfolioEntry createEntry(List<Holding> holdings, Quote q) {
+    PortfolioEntry createEntry(List<Holding> holdings, IQuote q) {
         String currency = holdings.get(0).getTicker().getCurrency();
         Double fxRateToBase = fxRatesService.getRateToUsd(currency);
         double currPrice = getCurrentPrice(q);
@@ -129,7 +131,7 @@ public class PortfolioService {
 
         double avgUnitCost = totalCost / totalNumShares;
 
-        double dailyGainBase  = q.getChange() * totalNumShares * fxRateToBase;
+        double dailyGainBase  = q.getChange().get() * totalNumShares * fxRateToBase;
 
         double totalGain = currMarketValue - totalCost;
         double totalGainBase = totalGain * fxRateToBase;
@@ -138,13 +140,13 @@ public class PortfolioService {
         Recommendation recommendation = calcRecommendation(q);
 
         return new PortfolioEntry(q.getSymbol(), q.getName(), totalNumShares,
-                currency, currPrice, q.getPercentChange(), dailyGainBase, totalCost, currMarketValue,
-                currMarketValueBase, totalPercentGain, totalGain, totalGainBase, q.getYearLow(), q.getYearHigh(), avgUnitCost,
+                currency, currPrice, q.getPercentChange().get(), dailyGainBase, totalCost, currMarketValue,
+                currMarketValueBase, totalPercentGain, totalGain, totalGainBase, avgUnitCost,
                 recommendation);
     }
 
 
-    Recommendation calcRecommendation(Quote quote) {
+    Recommendation calcRecommendation(IQuote quote) {
 
         Recommendation recommendation = new Recommendation();
 
@@ -152,9 +154,9 @@ public class PortfolioService {
 
 //        score += checkGoldenCross(ma50Day, ma200Day, recommendation);
 
-        score += checkDailyChange(quote.getPercentChange(), recommendation);
+        score += checkDailyChange(quote.getPercentChange().get(), recommendation);
 
-        score += checkMoveFromYearLowHigh(quote.getLastPrice(), quote.getYearLow(), quote.getYearHigh(), recommendation);
+//        score += checkMoveFromYearLowHigh(quote.getLastPrice(), quote.getYearLow(), quote.getYearHigh(), recommendation);
 
         if (score > 6) recommendation.setDirection(BUY);
         else if (score < 3) recommendation.setDirection(SELL);
@@ -225,13 +227,16 @@ public class PortfolioService {
         return adjust;
     }
 
-    private Double getCurrentPrice(Quote q) {
-        return Optional.ofNullable(q.getLastPrice()).orElse(
-                        q.getPreviousClose().orElse(0.0));
+    private Double getCurrentPrice(IQuote q) {
+        return q.getLastPrice().orElse(q.getPreviousClose().orElse(0.0));
     }
 
-    private double getTotalCost(List<Holding> holdings, Quote q) {
-        return holdings.stream().mapToDouble(Holding::getCost).sum();
+    private double getTotalCost(List<Holding> holdings, IQuote q) {
+        return holdings.stream()
+                .filter(h -> h.getCost() != null)
+                .mapToDouble(Holding::getCost)
+                .map(c -> c != 0.0 ? c : 1.0)
+                .sum();
     }
 
 }

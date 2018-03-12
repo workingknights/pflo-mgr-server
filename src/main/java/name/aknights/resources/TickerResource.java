@@ -2,11 +2,8 @@ package name.aknights.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
-import name.aknights.api.Data;
-import name.aknights.api.Model;
-import name.aknights.api.ModelEntry;
+import name.aknights.api.DataWrapper;
 import name.aknights.api.Ticker;
-import name.aknights.services.ModelService;
 import name.aknights.services.TickerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -50,7 +46,7 @@ public class TickerResource {
     @Timed
     public Response getAllTickers(@Auth Principal principal) {
         Collection<Ticker> tickers = tickerService.allTickers();
-        Data<Ticker> dataWrapper = new Data<Ticker>(tickers);
+        DataWrapper<Ticker> dataWrapper = new DataWrapper<Ticker>(tickers);
 
         return Response.ok(dataWrapper).build();
     }

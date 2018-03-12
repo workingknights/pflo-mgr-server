@@ -35,7 +35,7 @@ public class DbMigrate {
         List<Holding> holdings = holdingDAO.find().asList();
 
         for (Holding holding : holdings) {
-            holding.setUserId("google-oauth2|118300408301077615291");
+//            holding.setUserId("google-oauth2|118300408301077615291");
             holdingDAO.save(holding);
         }
     }

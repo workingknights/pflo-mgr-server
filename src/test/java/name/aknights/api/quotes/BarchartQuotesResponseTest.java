@@ -1,4 +1,4 @@
-package name.aknights.core.quotes;
+package name.aknights.api.quotes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;

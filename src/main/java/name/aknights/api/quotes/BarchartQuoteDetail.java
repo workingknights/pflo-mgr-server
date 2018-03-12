@@ -1,4 +1,4 @@
-package name.aknights.core.quotes;
+package name.aknights.api.quotes;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,17 +36,6 @@ public class BarchartQuoteDetail extends Quote {
     public BarchartQuoteDetail() {
     }
 
-//    public BarchartQuoteDetail(String symbol, String name, Double previousClose, Double lastPrice, Double percentChange, Double change, Double yearLow, Double yearHigh) {
-//        this.symbol = symbol;
-//        this.name = name;
-//        this.previousClose = previousClose;
-//        this.lastPrice = lastPrice;
-//        this.percentChange = percentChange;
-//        this.change = change;
-//        this.yearLow = yearLow;
-//        this.yearHigh = yearHigh;
-//    }
-
     @JsonProperty
     public void setSymbol(String symbol) {
         this.symbol = symbol;
@@ -73,8 +62,8 @@ public class BarchartQuoteDetail extends Quote {
     }
 
     @Override
-    public Double getPercentChange() {
-        return super.getPercentChange()/100;
+    public Optional<Double> getPercentChange() {
+        return Optional.of(super.getPercentChange().orElse(1.0)/100);
     }
 
     @JsonProperty("netChange")
@@ -82,13 +71,4 @@ public class BarchartQuoteDetail extends Quote {
         this.change = change;
     }
 
-    @JsonProperty("fiftyTwoWkLow")
-    public void setYearLow(Double yearLow) {
-        this.yearLow = yearLow;
-    }
-
-    @JsonProperty("fiftyTwoWkHigh")
-    public void setYearHigh(Double yearHigh) {
-        this.yearHigh = yearHigh;
-    }
 }

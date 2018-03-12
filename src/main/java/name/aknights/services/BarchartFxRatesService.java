@@ -1,10 +1,12 @@
 package name.aknights.services;
 
 import name.aknights.api.Ticker;
+import name.aknights.api.quotes.IQuote;
 import name.aknights.config.QuotesServiceConfiguration;
 import name.aknights.core.Currency;
 import name.aknights.core.Exchange;
-import name.aknights.core.quotes.Quote;
+import name.aknights.api.quotes.Quote;
+import org.bson.types.ObjectId;
 
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
@@ -24,16 +26,16 @@ public class BarchartFxRatesService extends BarchartQuotesService implements FxR
 
         switch (currency) {
             case GBp : {
-                Set<Quote> quotes = this.getQuote(new Ticker("^GBPUSD", null, Exchange.NONE.name(), null));
+                Set<IQuote> quotes = this.getQuote(new Ticker(ObjectId.get().toHexString(), "^GBPUSD", null, Exchange.NONE.name(), null));
                 if (!quotes.isEmpty())
-                    rateToUsd[0] = quotes.iterator().next().getLastPrice() * currency.getFactor();
+                    rateToUsd[0] = quotes.iterator().next().getLastPrice().get() * currency.getFactor();
                 break;
             }
             case USD : rateToUsd[0] = 1.0; break;
             default: {
-                Set<Quote> quotes = this.getQuote(new Ticker(String.format("^%sUSD", fromCurrency), null, Exchange.NYSEARCA.name(), null));
+                Set<IQuote> quotes = this.getQuote(new Ticker(ObjectId.get().toHexString(), String.format("^%sUSD", fromCurrency), null, Exchange.NYSEARCA.name(), null));
                 if (!quotes.isEmpty())
-                    rateToUsd[0] = quotes.iterator().next().getLastPrice() * currency.getFactor();
+                    rateToUsd[0] = quotes.iterator().next().getLastPrice().get() * currency.getFactor();
                 break;
             }
         }

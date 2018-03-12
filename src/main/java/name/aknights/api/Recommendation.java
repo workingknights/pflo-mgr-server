@@ -1,4 +1,4 @@
-package name.aknights.core;
+package name.aknights.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

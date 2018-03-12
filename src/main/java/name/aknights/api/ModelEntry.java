@@ -1,30 +1,26 @@
 package name.aknights.api;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Value;
 import org.hibernate.validator.constraints.Length;
 
+import javax.annotation.security.DenyAll;
 import javax.validation.constraints.Min;
 
+@Data
+@NoArgsConstructor
 public class ModelEntry {
+
     @Length(max = 6)
-    private String ticker;
+    String ticker;
 
     @Min(0)
-    private Double portfolioWeight;
+    Double portfolioWeight;
 
-   public String getTicker() {
-        return ticker;
-    }
-
-    public void setTicker(String ticker) {
+    public ModelEntry(String ticker, double weight) {
         this.ticker = ticker;
-    }
-
-    public Double getPortfolioWeight() {
-        return portfolioWeight;
-    }
-
-    public void setPortfolioWeight(Double portfolioWeight) {
-        this.portfolioWeight = portfolioWeight;
+        this.portfolioWeight = weight;
     }
 
     @Override

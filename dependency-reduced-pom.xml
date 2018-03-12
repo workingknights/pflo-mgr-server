@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>pflo-mgr-parent</artifactId>
-    <groupId>name.aknights</groupId>
-    <version>0.1-SNAPSHOT</version>
-  </parent>
   <modelVersion>4.0.0</modelVersion>
+  <groupId>name.aknights</groupId>
   <artifactId>pflo-mgr-server</artifactId>
+  <version>0.1-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>
@@ -69,29 +66,6 @@
             <goals>
               <goal>jar</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-artifact</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>${project.artifactId}</artifactId>
-                  <version>${project.version}</version>
-                  <type>${project.packaging}</type>
-                </artifactItem>
-              </artifactItems>
-              <outputDirectory>${project.parent.relativePath}/../target</outputDirectory>
-            </configuration>
           </execution>
         </executions>
       </plugin>
